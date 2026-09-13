@@ -92,9 +92,31 @@ python scripts/check.py --journal data/sent.jsonl
 Оба числа должны быть нулевыми: после штатного прогона и после прогона, в
 котором мы ломали компоненты.
 
-Скрипты работают на Python 3.11+ локально либо из контейнера — образ описан в
-`scripts/Dockerfile.tools`. Подключение к базе берётся из переменных окружения
-(см. `.env.example`).
+### Чем запускать скрипты
+
+Вариант первый — локальный Python 3.11+:
+
+```bash
+pip install -r scripts/requirements.txt
+python scripts/load.py --api http://localhost:8000 --rate 50 --duration 20
+python scripts/check.py --dsn postgresql://orders:orders@localhost:5432/orders
+```
+
+Вариант второй — из контейнера, если не хочется ставить зависимости:
+
+```bash
+docker build -f scripts/Dockerfile.tools -t order-stand-tools scripts/
+
+docker run --rm --network <сеть_вашего_compose> -v "$PWD/data:/data" order-stand-tools \
+  load.py --api http://order-api:8000 --rate 50 --duration 20 --journal /data/sent.jsonl
+
+docker run --rm --network <сеть_вашего_compose> -v "$PWD/data:/data" order-stand-tools \
+  check.py --journal /data/sent.jsonl --dsn postgresql://orders:orders@postgres:5432/orders
+```
+
+Подключение к базе можно задавать и переменной `DATABASE_URL` — образец в
+`.env.example`. Обратите внимание: изнутри сети Docker хосты называются
+`order-api` и `postgres`, снаружи — `localhost`.
 
 ## Порядок приёмки
 
