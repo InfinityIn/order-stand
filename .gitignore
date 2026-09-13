@@ -1,0 +1,23 @@
+# Креды и служебные материалы приёмки — никогда не попадают в публичный репозиторий
+.secrets/
+
+# Данные прогонов
+data/*.jsonl
+data/*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Окружение
+.env
+.env.local
+
+# IDE / ОС
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

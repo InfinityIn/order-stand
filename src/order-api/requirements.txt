@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+aiokafka
+asyncpg
+prometheus-client
+pydantic
